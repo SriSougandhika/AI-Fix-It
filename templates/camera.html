@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Feed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #videoFeed {
+            width: 640px;
+            height: 480px;
+            border: 2px solid black;
+            display: block;
+            margin: 0 auto;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Real-Time Mechanical Parts Detection</h1>
+    <div>
+        <img id="videoFeed" src="{{ url_for('video_feed') }}" alt="Camera Feed" />
+    </div>
+    <a href="/stop_camera"><button>Stop Camera</button></a>
+</body>
+</html>

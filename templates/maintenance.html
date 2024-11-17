@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance History</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/css/bootstrap.min.css">
+    <script>
+        let index = 0; // Start with index 0
+
+        // Function to fetch data and update the table
+        async function updateTable() {
+            try {
+                const response = await fetch(`/update_maintenance?index=${index}`);
+                const data = await response.json();
+
+                // Update the table with new data
+                document.getElementById('vehicle-id').textContent = data.Vehicle_ID;
+                document.getElementById('make-and-model').textContent = data.Make_and_Model;
+                document.getElementById('last-maintenance-date').textContent =
+                    `${data.Last_Maintenance_Year}-${data.Last_Maintenance_Month}-${data.Last_Maintenance_Day}`;
+                document.getElementById('maintenance-type').textContent = data.Maintenance_Type;
+                document.getElementById('maintenance-required').innerHTML =
+                    data.Maintenance_Required == 1
+                        ? '<span class="badge bg-danger">Yes</span>'
+                        : '<span class="badge bg-success">No</span>';
+
+                // Increment the index for the next update
+                index++;
+            } catch (error) {
+                console.error('Error updating table:', error);
+            }
+        }
+
+        // Fetch data every 3 seconds
+        setInterval(updateTable, 3000);
+
+        // Initial call to populate table
+        window.onload = updateTable;
+    </script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Vehicle Maintenance History</h1>
+
+        <!-- Table displaying maintenance predictions -->
+        <table class="table table-bordered mt-4">
+            <thead>
+                <tr>
+                    <th>Vehicle ID</th>
+                    <th>Make and Model</th>
+                    <th>Last Maintenance Date</th>
+                    <th>Maintenance Type</th>
+                    <th>Maintenance Required</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="vehicle-id"></td>
+                    <td id="make-and-model"></td>
+                    <td id="last-maintenance-date"></td>
+                    <td id="maintenance-type"></td>
+                    <td id="maintenance-required"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Button to return to the homepage -->
+        <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Back to Home</a>
+    </div>
+</body>
+</html>

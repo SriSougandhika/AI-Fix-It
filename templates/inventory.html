@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobility Inventory</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .notification {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Mobility Manufacturing Inventory</h1>
+
+        <!-- Table displaying inventory -->
+        <table class="table table-bordered mt-4" id="inventory-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Available Quantity</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Inventory rows will be dynamically populated -->
+            </tbody>
+        </table>
+
+        <!-- Notification banner (below the table now) -->
+        <div id="low-stock-notification" class="notification"></div>
+    </div>
+
+    <!-- JavaScript to handle updates -->
+    <script>
+        function fetchInventory() {
+            $.getJSON("/get_inventory", function(data) {
+                let tableBody = $("#inventory-table tbody");
+                let lowStockMessage = "";
+                tableBody.empty();
+                data.forEach(item => {
+                    let row = `
+                        <tr>
+                            <td>${item.product}</td>
+                            <td>${item.quantity}</td>
+                            <td>
+                                ${item.quantity < item.threshold ?
+                                    `<button class="btn btn-warning" onclick="replenish('${item.product}')">Purchase</button>` :
+                                    `No Action Required`
+                                }
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.append(row);
+                    if (item.quantity < item.threshold) {
+                        lowStockMessage += `<strong>${item.product}</strong> stock is low!<br>`;
+                    }
+                });
+
+                // If low stock products exist, show the notification
+                if (lowStockMessage) {
+                    $("#low-stock-notification").html(lowStockMessage).show();
+                } else {
+                    $("#low-stock-notification").hide();
+                }
+            });
+        }
+
+        function replenish(product) {
+            $.ajax({
+                url: "/replenish_inventory",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ product: product }),
+                success: function(response) {
+                    alert(response.message);
+                    fetchInventory(); // Refresh inventory after replenishing
+                }
+            });
+        }
+
+        // Refresh inventory every 5 seconds
+        setInterval(fetchInventory, 5000);
+
+        // Fetch inventory on page load
+        fetchInventory();
+    </script>
+</body>
+</html>
