@@ -71,3 +71,6 @@ The presented prototype has the following three independent models:
 Currently, these models are working well as per the datasets considered and the AI algorithms implemented. This working prototype can be further enhanced to a fully automated and integrated model to help the OEMs. It can be performed considering a few layers on top of this basic prototype to make more out of it
 
 The classification can be further involved in defect detection. The predictive maintenance model will not only mention the vehicle requiring attention but also the specific parts that are to be looked into. Finally, the inventory of the parts, will be integrated to ensure the execution of the predictive maintenance. If the parts are defective and cannot be repaired, then the inventory search will be triggered for that part. The products that are to be replaced will be ordered if the inventory runs out beyond the set threshold at any point of time. The products that are to be repaired will not trigger the inventory but contact the corresponding person (Alert/ message for the same can be displayed).
+
+## 🙌 Credits
+Project by Sri – an aspiring Data Scientist exploring AI in creative ways!
